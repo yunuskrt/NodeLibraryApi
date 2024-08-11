@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+require('dotenv').config()
 
 // middlewares
 app.use(express.json())
@@ -24,5 +25,4 @@ const start = async () => {
 		console.log(error.message)
 	}
 }
-
 start()
