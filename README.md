@@ -34,3 +34,20 @@
 - **Create Table Statements**
 
   - Under 'db.sql', create table queries may be found that shows the table structure of mysql database.
+
+## How To Test?
+
+### Prerequisites
+
+1. **Ensure that you have XAMPP installed**: and running with MySQL.
+2. **Run Apache Web Server and MySQL Database from Xampp**:
+3. **Set the database**: Set db in phpmyadmin and create tables for the database using the queries in 'db.sql' file.
+4. **Install dependencies**: Make sure you have all necessary dependencies installed by running:
+   ```bash
+   $ npm install
+   ```
+5. **Set environment variables**: Set 'DB_USER', 'DB_NAME', 'DB_PASS', 'DB_HOST' in .env file for the mysql database connection in xampp.
+6. **Start the server**
+   ```bash
+   $ npm start
+   ```
