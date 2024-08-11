@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const notFound = require('./middleware/notFound')
 require('dotenv').config()
 
 // middlewares
@@ -13,6 +14,9 @@ const bookRouter = require('./routes/book')
 
 app.use('/users', userRouter)
 app.use('/books', bookRouter)
+
+// not found middleware
+app.use(notFound)
 
 const port = process.env.PORT || 3000
 
