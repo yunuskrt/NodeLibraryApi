@@ -84,29 +84,39 @@ const borrowBook = asyncWrapper(async (req, res) => {
 		if (!book) {
 			res.status(404).json({ message: 'Book not found' })
 		} else {
+			// check if book is already borrowed and not returned
 			const borrowedBook = await Borrow.findOne({
 				where: {
-					userId,
 					bookId,
+					returned: false,
 				},
 			})
 			if (borrowedBook) {
-				if (!borrowedBook.returned) {
-					// book is already borrowed and not returned
-					res
-						.status(400)
-						.json({ message: `${user.name} already borrowed ${book.name}.` })
-				} else {
-					// borrow book again
-					borrowedBook.returned = false
-					borrowedBook.score = -1
-					await borrowedBook.save()
-					res.status(201).end()
-				}
+				res.status(400).json({
+					message: `${book.name} is already borrowed.`,
+				})
 			} else {
-				// borrow book first time
-				await Borrow.create({ userId, bookId })
-				res.status(201).end()
+				// create or get the borrow record for user and book
+				const [userBorrow, created] = await Borrow.findOrCreate({
+					where: {
+						userId,
+						bookId,
+					},
+					defaults: {
+						// for create
+						userId,
+						bookId,
+						returned: false,
+						score: -1,
+					},
+				})
+				if (userBorrow.returned) {
+					// user borrows same book again
+					userBorrow.returned = false
+					userBorrow.score = -1
+					await userBorrow.save()
+				}
+				res.status(204).end()
 			}
 		}
 	}
@@ -131,9 +141,9 @@ const returnBook = asyncWrapper(async (req, res) => {
 		borrow.score = score
 		borrow.returned = true
 
-		const borrowedUpdate = await borrow.save()
+		await borrow.save()
 
-		res.status(200).json(borrowedUpdate)
+		res.status(204).end()
 	}
 })
 
