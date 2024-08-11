@@ -5,6 +5,7 @@ const asyncWrapper = (fn) => {
 		try {
 			await fn(req, res, next)
 		} catch (err) {
+			console.error(err)
 			let status = 500
 			if (err instanceof Joi.ValidationError) {
 				status = 400
